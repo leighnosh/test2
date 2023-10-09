@@ -18,6 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
   for(var i = 0; i < items.length; i++){
     items[i].style.fontWeight = 'bold';
   }
+  //Cannot access item by via getElementByClassName as it is not a part of the class
+  //Changes made to item 5 using tagName
+  var li = document.getElementsByTagName('li');
+  li[4].style.backgroundColor = 'pink'
 
 
 });
