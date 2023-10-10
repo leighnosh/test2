@@ -1,60 +1,89 @@
-document.addEventListener('DOMContentLoaded', function() {
-  var headerTitle = document.getElementById('header-title');
-  var header = document.getElementById('main-header');
-  header.style.borderBottom = 'solid 8px #000'
-
-  var addItemHeading = document.querySelector('.title');
-  addItemHeading.style.fontWeight = 'bold';
-  addItemHeading.style.color = 'green';
-  addItemHeading.style.textTransform = 'uppercase';
-  headerTitle.style.textTransform = 'uppercase';
-  headerTitle.style.color = 'black';
-
-  var submitButton = document.querySelector('.btn-dark');
-  submitButton.style.backgroundColor = 'green';
-
-  var items = document.getElementsByClassName('list-group-item');
-  items[2].style.backgroundColor = 'green';
-  for(var i = 0; i < items.length; i++){
-    items[i].style.fontWeight = 'bold';
-  }
-  //Cannot access item by via getElementByClassName as it is not a part of the class
-  //Changes made to item 5 using tagName
-  var li = document.getElementsByTagName('li');
-  li[4].style.backgroundColor = 'pink'
-
-  var headerTitle = document.querySelector('#main-header')
-  header.style.border ='solid 10px pink';
-
-  var input = document.querySelector('input');
-  input.value = 'Hello World'
-
-  var submit = document.querySelector('input[type="submit"]');
-  submit.value = 'SEND';
-
-  var item = document.querySelector('.list-group-item');
-  item.style.color = 'red';
-
-  //Changing bg color for 2nd item to green
-  var secondItem = document.querySelector('.list-group-item:nth-child(2');
-  secondItem.style.backgroundColor = 'green';
+var form = document.getElementById('addForm');
+var itemList = document.getElementById('items');
+var fiter = document.getElementById('filter');
 
 
-//Making  thrid item invisible
-  var thirdItem = document.querySelector('.list-group-item:nth-child(3');
-  thirdItem.style.visibility = 'hidden';
+//form submit event
+form.addEventListener('submit', addItem);
+
+// Delete Event
+itemList.addEventListener('click', removeItem);
+
+//filter event
+filter.addEventListener('keyup', filterItems);
 
 
-//Making second child font green
-  var even = document.querySelectorAll('li:nth-child(even');
-  even[0].style.color = 'green'
-
+// Add item
+function addItem(e){
+    e.preventDefault();
   
+    // Get input value
+    var newItem = document.getElementById('item').value;
+    var newDescription = document.getElementById('description').value;
+  
+    // Create new li element
+    var li = document.createElement('li');
+    // Add class
+    li.className = 'list-group-item';
+  
+    // Create separate elements for item name and description
+    var itemNameElement = document.createElement('span');
+    itemNameElement.appendChild(document.createTextNode(newItem));
 
-//Making odd item background green
-  var odd = document.querySelectorAll('li:nth-child(odd');
-  for (var i = 0; i < odd.length; i++){
-    odd[i].style.backgroundColor = 'green';
+    var descriptionElement = document.createElement('span');
+    descriptionElement.className = 'description';
+    descriptionElement.appendChild(document.createTextNode(newDescription));
+
+    //create delete button element
+    var deleteBtn = document.createElement('button');
+    //add classes to del button
+    deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+    //append text node
+    deleteBtn.appendChild(document.createTextNode('X'));
+
+    //create edit button element
+    var editBtn = document.createElement('button');
+    //add classes to edit button
+    editBtn.className = 'btn btn-primary btn-sm float-right edit';
+    //append text node
+    editBtn.appendChild(document.createTextNode('Edit'));
+
+    // Append elements to li
+    li.appendChild(itemNameElement);
+    li.appendChild(descriptionElement);
+    li.appendChild(deleteBtn);
+    li.appendChild(editBtn);
+
+    itemList.appendChild(li);
+
+    // Clear input fields after adding item
+    document.getElementById('item').value = '';
+    document.getElementById('description').value = '';
+}
+//Remove Item
+function removeItem(e){
+    if(e.target.classList.contains('delete')){
+        if (confirm('Are you sure?')){
+            var li = e.target.parentElement;
+            itemList.removeChild(li);
+        }
+    }
+}
+
+
+function filterItems(e){
+    // convert text to lower
+    var text = e.target.value.toLowerCase();
+    // Get li
+    var items = itemList.getElementsByTagName('li');
+    // Convert to an array
+    Array.from(items).forEach(function(item){
+      var itemName = item.firstChild.textContent;
+      var itemDescription = item.childNodes[1].textContent.toLowerCase();
+      if(itemName.toLowerCase().indexOf(text) != -1 || itemDescription.indexOf(text) != -1){
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
   }
-
-});
